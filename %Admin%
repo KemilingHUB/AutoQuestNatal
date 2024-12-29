@@ -1,0 +1,297 @@
+--[[
+
+Open source
+Made by ge8395
+
+]]
+
+local CoreGui = game:GetService("StarterGui")
+local Players = game:GetService("Players")
+
+local function isNumber(str)
+  if tonumber(str) ~= nil or str == 'inf' then
+    return true
+  end
+end
+
+getgenv().Walkspeed = game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed
+getgenv().Jumppower = game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower
+
+getgenv().TPSpeed = 3
+getgenv().TPWalk = false
+
+--// UI
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Vcsk/UI-Library/main/Source/MyUILib(Unamed).lua"))();
+local Window = Library:Create("KemilingHUB by ge8395")
+
+local HomeTab = Window:Tab("Home","rbxassetid://10888331510")
+local PlayerTab = Window:Tab("Players","rbxassetid://12296135476")
+local Teleport = Window:Tab("Teleport","rbxassetid://12308581351")
+
+HomeTab:InfoLabel("Jangan Lupa Hidupkan AntiAFK")
+
+HomeTab:Section("Main")
+
+HomeTab:Button("ANTI AFK", function(state)
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/KemilingHUB/antiafk/refs/heads/main/afk'))()
+end)
+
+HomeTab:Keybind("Toggle UI", Enum.KeyCode.LeftControl, function()
+    Library:ToggleUI()
+end)
+
+PlayerTab:TextBox("WalkSpeed", function(value)
+    getgenv().Walkspeed = value
+    pcall(function()
+        game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = value
+    end)
+end)
+
+PlayerTab:Toggle("Loop WalkSpeed", function(state)
+    getgenv().loopW = state
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if loopW == true then
+            pcall(function()
+                game:GetService("Players").LocalPlayer.Character.Humanoid.WalkSpeed = Walkspeed
+            end)
+        end
+    end)
+end)
+
+PlayerTab:TextBox("JumpPower", function(value)
+    getgenv().Jumppower = value
+    pcall(function()
+        game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = value
+    end)
+end)
+
+PlayerTab:Toggle("Loop JumpPower", function(state)
+    getgenv().loopJ = state
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if loopJ == true then
+            pcall(function()
+                game:GetService("Players").LocalPlayer.Character.Humanoid.JumpPower = Jumppower
+            end)
+        end
+    end)
+end)
+
+PlayerTab:TextBox("TP Speed", function(value)
+getgenv().TPSpeed = value
+end)
+
+PlayerTab:Toggle("TP Walk", function(s)
+getgenv().TPWalk = s
+local hb = game:GetService("RunService").Heartbeat
+local player = game:GetService("Players")
+local lplr = player.LocalPlayer
+local chr = lplr.Character
+local hum = chr and chr:FindFirstChildWhichIsA("Humanoid")
+while getgenv().TPWalk and hb:Wait() and chr and hum and hum.Parent do
+  if hum.MoveDirection.Magnitude > 0 then
+    if getgenv().TPSpeed and isNumber(getgenv().TPSpeed) then
+      chr:TranslateBy(hum.MoveDirection * tonumber(getgenv().TPSpeed))
+    else
+      chr:TranslateBy(hum.MoveDirection)
+    end
+  end
+end
+end)
+
+PlayerTab:Slider("Fov", game.Workspace.CurrentCamera.FieldOfView,120, function(v)
+     game.Workspace.CurrentCamera.FieldOfView = v
+end)
+
+PlayerTab:Toggle("Noclip", function(s)
+    getgenv().Noclip = s
+    game:GetService("RunService").Heartbeat:Connect(function()
+        if Noclip == true then
+            game:GetService("RunService").Stepped:wait()
+            game.Players.LocalPlayer.Character.Head.CanCollide = false
+            game.Players.LocalPlayer.Character.Torso.CanCollide = false
+        end
+    end)
+end)
+
+PlayerTab:Toggle("Infinite Jump", function(s)
+getgenv().InfJ = s
+    game:GetService("UserInputService").JumpRequest:connect(function()
+        if InfJ == true then
+            game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+        end
+    end)
+end)
+
+PlayerTab:Button("ESP", function(state)
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/Alvantv/esp/refs/heads/main/KemilingHUB'))()
+end)
+
+PlayerTab:Button("Rejoin", function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+end)
+
+Teleport:InfoLabel("Jangan Spam")
+
+Teleport:InfoLabel("Other")
+Teleport:Button("Auto Quest", function()
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+    local humanoidRootPart = character.HumanoidRootPart
+
+    -- Move to scene 1
+    humanoidRootPart.CFrame = CFrame.new(153, 12, -19) -- scene 1
+    wait(1) -- Wait for a moment
+    -- Move to scene 2
+    humanoidRootPart.CFrame = CFrame.new(39, 6, -52) -- scene 2
+    wait(86) -- Long wait, ensure this is intended
+
+    humanoidRootPart.Anchored = true
+
+    -- Move to Legos
+    humanoidRootPart.CFrame = CFrame.new(-216, 6, -91) -- Legos
+    wait(1) -- Wait for 1 second to ensure the character is in position
+    local LegosPrompt = workspace:FindFirstChild("Character"):FindFirstChild("Used_Legos"):FindFirstChild("ProximityPrompt")
+    if LegosPrompt then
+        fireproximityprompt(LegosPrompt) -- Fire the proximity prompt
+    else
+        warn("Legos ProximityPrompt not found!")
+    end
+
+    -- Move to Pengemudi
+    humanoidRootPart.CFrame = CFrame.new(-267, 5, -103) -- Pengemudi
+    wait(1)
+    local PengemudiPrompt = workspace:FindFirstChild("Character"):FindFirstChild("Pengemudiindonesiaa"):FindFirstChild("ProximityPrompt")
+    if PengemudiPrompt then
+        fireproximityprompt(PengemudiPrompt)
+    else
+        warn("Pengemudi ProximityPrompt not found!")
+    end
+
+    -- Move to Otnas
+    humanoidRootPart.CFrame = CFrame.new(-327, 5, -72) -- Otnas
+    wait(1)
+    local OtnasPrompt = workspace:FindFirstChild("Character"):FindFirstChild("MisterOtnas"):FindFirstChild("ProximityPrompt")
+    if OtnasPrompt then
+        fireproximityprompt(OtnasPrompt)
+    else
+        warn("Otnas ProximityPrompt not found!")
+    end
+
+    -- Move to Rew
+    humanoidRootPart.CFrame = CFrame.new(-327, 5, -72) -- Rew
+    wait(1)
+    local RewPrompt = workspace:FindFirstChild("Character"):FindFirstChild("rew_267"):FindFirstChild("ProximityPrompt")
+    if RewPrompt then
+        fireproximityprompt(RewPrompt)
+    else
+        warn("Rew ProximityPrompt not found!")
+    end
+
+    -- Move to Yahya
+    humanoidRootPart.CFrame = CFrame.new(-328, 5, -128) -- Yahya
+    wait(1)
+    local YahyaPrompt = workspace:FindFirstChild("Character"):FindFirstChild("yahyasenuadjie"):FindFirstChild("ProximityPrompt")
+    if YahyaPrompt then
+        fireproximityprompt(YahyaPrompt)
+    else
+        warn("Yahya ProximityPrompt not found!")
+    end
+
+    -- Move to Tipenz ```lua
+    humanoidRootPart.CFrame = CFrame.new(-271, 5, -144) -- Tipenz
+    wait(1)
+    local TipenzPrompt = workspace:FindFirstChild("Character"):FindFirstChild("Tippenzs"):FindFirstChild("ProximityPrompt")
+    if TipenzPrompt then
+        fireproximityprompt(TipenzPrompt)
+    else
+        warn("Tipenz ProximityPrompt not found!")
+    end
+
+    -- Move to the_smash9
+    humanoidRootPart.CFrame = CFrame.new(-278, 5, -217) -- the_smash9
+    wait(1)
+    local Smash9Prompt = workspace:FindFirstChild("Character"):FindFirstChild("the_smash9"):FindFirstChild("ProximityPrompt")
+    if Smash9Prompt then
+        fireproximityprompt(Smash9Prompt)
+    else
+        warn("the_smash9 ProximityPrompt not found!")
+    end
+
+    -- Move to denannr
+    humanoidRootPart.CFrame = CFrame.new(-301, 5, -232) -- denannr
+    wait(1)
+    local DenannrPrompt = workspace:FindFirstChild("Character"):FindFirstChild("denannr"):FindFirstChild("ProximityPrompt")
+    if DenannrPrompt then
+        fireproximityprompt(DenannrPrompt)
+    else
+        warn("denannr ProximityPrompt not found!")
+    end
+
+    -- Move to rungkadkacaw
+    humanoidRootPart.CFrame = CFrame.new(-310, 5, -216) -- rungkadkacaw
+    wait(1)
+    local RungkadkacawPrompt = workspace:FindFirstChild("Character"):FindFirstChild("rungkadkacaw"):FindFirstChild("ProximityPrompt")
+    if RungkadkacawPrompt then
+        fireproximityprompt(RungkadkacawPrompt)
+    else
+        warn("rungkadkacaw ProximityPrompt not found!")
+    end
+
+    -- Move to DA0ZA
+    humanoidRootPart.CFrame = CFrame.new(-357, 5, -230) -- DA0ZA
+    wait(1)
+    local DA0ZAPrompt = workspace:FindFirstChild("Character"):FindFirstChild("DA0ZA"):FindFirstChild("ProximityPrompt")
+    if DA0ZAPrompt then
+        fireproximityprompt(DA0ZAPrompt)
+    else
+        warn("DA0ZA ProximityPrompt not found!")
+    end
+
+    -- Move to wheresjulmans
+    humanoidRootPart.CFrame = CFrame.new(-324, 5, -277) -- wheresjulmans
+    wait(1)
+    local WheresjulmansPrompt = workspace:FindFirstChild("Character"):FindFirstChild("wheresjulmans"):FindFirstChild("ProximityPrompt")
+    if WheresjulmansPrompt then
+        fireproximityprompt(WheresjulmansPrompt)
+    else
+        warn("wheresjulmans ProximityPrompt not found!")
+    end
+
+    wait(15)
+
+    -- Move to Carrot
+    humanoidRootPart.CFrame = CFrame.new(-364, 5, -171) -- Carrot
+    wait(1)
+    local CarrotPrompt = workspace:FindFirstChild("Character"):FindFirstChild("Carrot"):FindFirstChild("ProximityPrompt")
+    if CarrotPrompt then
+        fireproximityprompt(CarrotPrompt)
+    else
+        warn("Carrot ProximityPrompt not found!")
+    end
+
+    -- Move to Rabbit
+    humanoidRootPart.CFrame = CFrame.new(-231, 5, -195) -- Rabbit
+    wait(1)
+    local RabbitPrompt = workspace:FindFirstChild("Character"):FindFirstChild("Rabbit"):FindFirstChild("ProximityPrompt")
+    if RabbitPrompt then
+        fireproximityprompt(RabbitPrompt)
+    else
+        warn("Rabbit ProximityPrompt not found!")
+    end
+
+    wait(5)
+
+    -- Move to Racoon
+    humanoidRootPart.CFrame = CFrame.new(-316, 18, -360) -- Racoon
+    wait(1)
+    local RacoonPrompt = workspace:FindFirstChild("Character"):FindFirstChild("Racoon"):FindFirstChild("ProximityPrompt")
+    if RacoonPrompt then
+        fireproximityprompt(RacoonPrompt)
+    else
+        warn("Racoon ProximityPrompt not found!")
+    end
+    wait(20)
+    -- Move to scene 3 (ending)
+    humanoidRootPart.CFrame = CFrame.new(-84, 13, -92) -- scene 3 (ending)
+end)
